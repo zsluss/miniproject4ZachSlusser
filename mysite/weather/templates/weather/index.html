@@ -51,6 +51,30 @@
             padding: 12px;
             color: #244f2f;
         }
+        .recent-searches {
+            margin-top: 24px;
+        }
+        .recent-searches h2 {
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        th,
+        td {
+            border: 1px solid #d6dce2;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #f7fafc;
+            color: #34495e;
+        }
         button {
             margin-top: 24px;
             width: 100%;
@@ -101,6 +125,36 @@
                 Condition: {{ weather_result.condition }}
             </div>
         {% endif %}
+
+        <div class="recent-searches">
+            <h2>Recent Searches</h2>
+            {% if recent_searches %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Search Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_searches %}
+                            <tr>
+                                <td>{{ item.zip.name.name }}</td>
+                                <td>
+                                    Zip: {{ item.zip.zipcode }}<br>
+                                    Temperature: {{ item.temperature }} F<br>
+                                    Humidity: {{ item.humidity }}%<br>
+                                    Condition: {{ item.condition }}<br>
+                                    Recorded: {{ item.pub_date|date:"M d, Y g:i A" }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No recent searches yet.</p>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

@@ -49,11 +49,17 @@ def index(request):
     else:
         form = WeatherSearchForm()
 
+    recent_searches = (
+        WeatherData.objects.select_related("zip", "zip__name")
+        .order_by("-pub_date")[:10]
+    )
+
     return render(
         request,
         "weather/index.html",
         {
             "form": form,
             "weather_result": weather_result,
+            "recent_searches": recent_searches,
         },
     )
