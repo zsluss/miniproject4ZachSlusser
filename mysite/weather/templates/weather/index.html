@@ -43,6 +43,14 @@
             margin: 4px 0 0;
             font-size: 0.875rem;
         }
+        .result {
+            margin-top: 20px;
+            background: #ecf8ef;
+            border: 1px solid #b7e1c2;
+            border-radius: 6px;
+            padding: 12px;
+            color: #244f2f;
+        }
         button {
             margin-top: 24px;
             width: 100%;
@@ -65,6 +73,13 @@
         <p>Enter your name and a zip code to check the weather.</p>
         <form method="post">
             {% csrf_token %}
+            {% if form.non_field_errors %}
+                <ul class="errorlist">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             {% for field in form %}
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
@@ -78,6 +93,14 @@
             {% endfor %}
             <button type="submit">Check Weather</button>
         </form>
+        {% if weather_result %}
+            <div class="result">
+                <strong>Current Weather</strong><br>
+                Temperature: {{ weather_result.temperature }} F<br>
+                Humidity: {{ weather_result.humidity }}%<br>
+                Condition: {{ weather_result.condition }}
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
