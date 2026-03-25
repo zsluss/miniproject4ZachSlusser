@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 480px;
+            margin: 80px auto;
+            padding: 0 20px;
+            background-color: #f0f4f8;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .errorlist {
+            color: #e74c3c;
+            list-style: none;
+            padding: 0;
+            margin: 4px 0 0;
+            font-size: 0.875rem;
+        }
+        button {
+            margin-top: 24px;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Weather Lookup</h1>
+        <p>Enter your name and a zip code to check the weather.</p>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+            <button type="submit">Check Weather</button>
+        </form>
+    </div>
+</body>
+</html>

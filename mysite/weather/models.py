@@ -9,5 +9,12 @@ class Name(models.Model):
 
 class Zip(models.Model):
     name = models.ForeignKey(Name, on_delete=models.CASCADE)
-    zipcode = models.IntegerField(max_length=5)
+    zipcode = models.CharField(max_length=5)
     pub_date = models.DateTimeField("time checked")
+
+class WeatherData(models.Model):
+    zip = models.ForeignKey(Zip, on_delete=models.CASCADE)
+    temperature = models.FloatField()
+    humidity = models.FloatField()
+    condition = models.CharField(max_length=100)
+    pub_date = models.DateTimeField("time recorded")
