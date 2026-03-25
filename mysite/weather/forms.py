@@ -2,11 +2,6 @@ from django import forms
 
 
 class WeatherSearchForm(forms.Form):
-    name = forms.CharField(
-        max_length=50,
-        label="Your Name",
-        widget=forms.TextInput(attrs={"placeholder": "Enter your name"}),
-    )
     zipcode = forms.CharField(
         max_length=5,
         min_length=5,

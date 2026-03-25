@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from weather import views as weather_views
 
 urlpatterns = [
+    path("", weather_views.home, name="home"),
+    path("accounts/", include("django.contrib.auth.urls")),
     path("weather/", include("weather.urls")),
     path("admin/", admin.site.urls),
 ]

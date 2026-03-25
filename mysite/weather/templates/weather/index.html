@@ -15,6 +15,23 @@
         h1 {
             color: #2c3e50;
         }
+        .auth-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+        .auth-row form {
+            margin: 0;
+        }
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .card {
             background: white;
             border-radius: 8px;
@@ -89,12 +106,33 @@
         button:hover {
             background-color: #2980b9;
         }
+        .nav-link {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .logout-btn {
+            margin-top: 0;
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
     <div class="card">
+        <div class="auth-row">
+            <span>Signed in as {{ request.user.username }}</span>
+            <div class="auth-links">
+                <a class="nav-link" href="{% url 'my_searches' %}">My Searches</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="logout-btn" type="submit">Log Out</button>
+                </form>
+            </div>
+        </div>
         <h1>Weather Lookup</h1>
-        <p>Enter your name and a zip code to check the weather.</p>
+        <p>Enter a zip code to check the weather for your signed-in account.</p>
         <form method="post">
             {% csrf_token %}
             {% if form.non_field_errors %}
@@ -119,7 +157,7 @@
         </form>
         {% if weather_result %}
             <div class="result">
-                <strong>Current Weather</strong><br>
+                <strong>Current Weather @ {{ form.cleaned_data.zipcode }}</strong><br>
                 Temperature: {{ weather_result.temperature }} F<br>
                 Humidity: {{ weather_result.humidity }}%<br>
                 Condition: {{ weather_result.condition }}
@@ -132,16 +170,14 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
                             <th>Search Results</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in recent_searches %}
                             <tr>
-                                <td>{{ item.zip.name.name }}</td>
                                 <td>
-                                    Zip: {{ item.zip.zipcode }}<br>
+                                    Zip: {{ item.zip_search.zipcode }}<br>
                                     Temperature: {{ item.temperature }} F<br>
                                     Humidity: {{ item.humidity }}%<br>
                                     Condition: {{ item.condition }}<br>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Searches</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 720px;
+            margin: 80px auto;
+            padding: 0 20px;
+            background-color: #f0f4f8;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .top-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .nav-link {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        th,
+        td {
+            border: 1px solid #d6dce2;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #f7fafc;
+            color: #34495e;
+        }
+        p {
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="top-row">
+            <h1>My Searches</h1>
+            <div class="top-links">
+                <a class="nav-link" href="{% url 'index' %}">Back to Search</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="logout-btn" type="submit">Log Out</button>
+                </form>
+            </div>
+        </div>
+
+        {% if searches %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Zip Code</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>Condition</th>
+                        <th>Recorded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in searches %}
+                        <tr>
+                            <td>{{ item.zip_search.zipcode }}</td>
+                            <td>{{ item.temperature }} F</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>{{ item.condition }}</td>
+                            <td>{{ item.pub_date|date:"M d, Y g:i A" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have not searched for any weather yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

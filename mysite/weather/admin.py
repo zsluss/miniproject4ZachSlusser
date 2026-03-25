@@ -1,22 +1,16 @@
 from django.contrib import admin
-from .models import Name, Zip, WeatherData
-
-
-@admin.register(Name)
-class NameAdmin(admin.ModelAdmin):
-	list_display = ("name", "pub_date")
-	search_fields = ("name",)
+from .models import Zip, WeatherData
 
 
 @admin.register(Zip)
 class ZipAdmin(admin.ModelAdmin):
-	list_display = ("name", "zipcode", "pub_date")
-	search_fields = ("zipcode", "name__name")
+	list_display = ("user", "zipcode", "pub_date")
+	search_fields = ("zipcode", "user__username")
 	list_filter = ("pub_date",)
 
 
 @admin.register(WeatherData)
 class WeatherDataAdmin(admin.ModelAdmin):
-	list_display = ("zip", "temperature", "humidity", "condition", "pub_date")
-	search_fields = ("zip__zipcode", "condition")
+	list_display = ("zip_search", "temperature", "humidity", "condition", "pub_date")
+	search_fields = ("zip_search__zipcode", "condition")
 	list_filter = ("condition", "pub_date")
