@@ -1,196 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Lookup</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 480px;
-            margin: 80px auto;
-            padding: 0 20px;
-            background-color: #f0f4f8;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        .auth-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            font-size: 0.95rem;
-            color: #34495e;
-        }
-        .auth-row form {
-            margin: 0;
-        }
-        .auth-links {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-top: 16px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .errorlist {
-            color: #e74c3c;
-            list-style: none;
-            padding: 0;
-            margin: 4px 0 0;
-            font-size: 0.875rem;
-        }
-        .result {
-            margin-top: 20px;
-            background: #ecf8ef;
-            border: 1px solid #b7e1c2;
-            border-radius: 6px;
-            padding: 12px;
-            color: #244f2f;
-        }
-        .recent-searches {
-            margin-top: 24px;
-        }
-        .recent-searches h2 {
-            margin: 0 0 10px;
-            font-size: 1.1rem;
-            color: #2c3e50;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.92rem;
-        }
-        th,
-        td {
-            border: 1px solid #d6dce2;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background: #f7fafc;
-            color: #34495e;
-        }
-        button {
-            margin-top: 24px;
-            width: 100%;
-            padding: 12px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .nav-link {
-            color: #2980b9;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .logout-btn {
-            margin-top: 0;
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="auth-row">
-            <span>Signed in as {{ request.user.username }}</span>
-            <div class="auth-links">
-                <a class="nav-link" href="{% url 'my_searches' %}">My Searches</a>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button class="logout-btn" type="submit">Log Out</button>
-                </form>
-            </div>
-        </div>
-        <h1>Weather Lookup</h1>
-        <p>Enter a zip code to check the weather for your signed-in account.</p>
-        <form method="post">
-            {% csrf_token %}
-            {% if form.non_field_errors %}
-                <ul class="errorlist">
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% for field in form %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <ul class="errorlist">
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endfor %}
-            <button type="submit">Check Weather</button>
-        </form>
-        {% if weather_result %}
-            <div class="result">
-                <strong>Current Weather @ {{ form.cleaned_data.zipcode }}</strong><br>
-                Temperature: {{ weather_result.temperature }} F<br>
-                Humidity: {{ weather_result.humidity }}%<br>
-                Condition: {{ weather_result.condition }}
-            </div>
-        {% endif %}
+{% extends "base.html" %}
 
-        <div class="recent-searches">
-            <h2>Recent Searches</h2>
-            {% if recent_searches %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Search Results</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in recent_searches %}
-                            <tr>
-                                <td>
-                                    Zip: {{ item.zip_search.zipcode }}<br>
-                                    Temperature: {{ item.temperature }} F<br>
-                                    Humidity: {{ item.humidity }}%<br>
-                                    Condition: {{ item.condition }}<br>
-                                    Recorded: {{ item.pub_date|date:"M d, Y g:i A" }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No recent searches yet.</p>
-            {% endif %}
+{% block title %}Weather Lookup{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Weather Lookup</h1>
+                <p class="text-muted mb-4">Enter a zip code to check the weather for your signed-in account.</p>
+
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in field.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary w-100">Check Weather</button>
+                </form>
+
+                {% if weather_result %}
+                    <div class="alert alert-success mb-4" role="status">
+                        <div class="fw-semibold mb-1">Current Weather @ {{ form.cleaned_data.zipcode }}</div>
+                        <div>Temperature: {{ weather_result.temperature }} F</div>
+                        <div>Humidity: {{ weather_result.humidity }}%</div>
+                        <div>Condition: {{ weather_result.condition }}</div>
+                    </div>
+                {% endif %}
+
+                <h2 class="h5 mb-3">Recent Searches</h2>
+                {% if recent_searches %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Search Results</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in recent_searches %}
+                                    <tr>
+                                        <td>
+                                            <div>Zip: {{ item.zip_search.zipcode }}</div>
+                                            <div>Temperature: {{ item.temperature }} F</div>
+                                            <div>Humidity: {{ item.humidity }}%</div>
+                                            <div>Condition: {{ item.condition }}</div>
+                                            <div class="text-muted small">Recorded: {{ item.pub_date|date:"M d, Y g:i A" }}</div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No recent searches yet.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

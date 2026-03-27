@@ -6,7 +6,7 @@ class WeatherSearchForm(forms.Form):
         max_length=5,
         min_length=5,
         label="Zip Code",
-        widget=forms.TextInput(attrs={"placeholder": "e.g. 67601"}),
+        widget=forms.TextInput(attrs={"placeholder": "e.g. 67601", "class": "form-control"}),
     )
 
     def clean_zipcode(self):
