@@ -41,7 +41,16 @@ def home(request):
     if request.user.is_authenticated:
         return redirect("index")
 
-    return redirect("login")
+    recent_searches = (
+        WeatherData.objects.select_related("zip_search", "zip_search__user")
+        .order_by("-pub_date")[:3]
+    )
+
+    return render(
+        request,
+        "weather/home.html",
+        {"recent_searches": recent_searches},
+    )
 
 
 def logout_view(request):

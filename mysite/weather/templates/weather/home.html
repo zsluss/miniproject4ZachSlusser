@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Weather Lookup{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-body p-5 text-center">
+                <h1 class="h2 mb-3">Weather Lookup</h1>
+                <p class="text-muted fs-5 mb-4">Check weather by zip code and save your searches.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Log In</a>
+                <p class="text-muted small mt-3">
+                    New user? <a href="{% url 'signup' %}">Sign up here</a>
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="h4 mb-3">Recent Searches</h2>
+            {% if recent_searches %}
+                <div class="row row-cols-1 row-cols-md-1 g-3">
+                    {% for item in recent_searches %}
+                        <div class="col">
+                            <div class="card shadow-sm border-0 h-100 cursor-pointer"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#weatherModal"
+                                 data-zipcode="{{ item.zip_search.zipcode }}"
+                                 data-condition="{{ item.condition }}"
+                                 data-temperature="{{ item.temperature }}"
+                                 data-humidity="{{ item.humidity }}"
+                                 data-date="{{ item.pub_date|date:'M d, Y g:i A' }}"
+                                 data-user="{{ item.zip_search.user.username }}"
+                                 style="cursor: pointer;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        Zip Code: <span class="text-primary fw-bold">{{ item.zip_search.zipcode }}</span>
+                                    </h5>
+                                    <p class="card-text mb-1">
+                                        <strong>Condition:</strong> {{ item.condition }}
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <strong>Temperature:</strong> {{ item.temperature }} °F
+                                    </p>
+                                    <p class="card-text mb-2">
+                                        <strong>Humidity:</strong> {{ item.humidity }}%
+                                    </p>
+                                    <p class="text-muted small">
+                                        Checked: {{ item.pub_date|date:"M d, Y g:i A" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No searches yet. <a href="{% url 'login' %}">Log in</a> to start checking weather!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Weather Details Modal -->
+<div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="weatherModalLabel">Weather Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Zip Code</strong></label>
+                    <p id="modalZipcode" class="text-primary fw-bold fs-5"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Condition</strong></label>
+                    <p id="modalCondition"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Temperature</strong></label>
+                    <p id="modalTemperature"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Humidity</strong></label>
+                    <p id="modalHumidity"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Searched By</strong></label>
+                    <p id="modalUser"></p>
+                </div>
+                <div class="mb-0">
+                    <label class="form-label"><strong>Date Checked</strong></label>
+                    <p id="modalDate" class="text-muted small"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const weatherModal = document.getElementById("weatherModal");
+        weatherModal.addEventListener("show.bs.modal", function (event) {
+            const trigger = event.relatedTarget;
+            document.getElementById("modalZipcode").textContent = trigger.dataset.zipcode;
+            document.getElementById("modalCondition").textContent = trigger.dataset.condition;
+            document.getElementById("modalTemperature").textContent = trigger.dataset.temperature + " °F";
+            document.getElementById("modalHumidity").textContent = trigger.dataset.humidity + "%";
+            document.getElementById("modalUser").textContent = trigger.dataset.user;
+            document.getElementById("modalDate").textContent = trigger.dataset.date;
+        });
+    });
+</script>
+    </div>
+</div>
+{% endblock %}
