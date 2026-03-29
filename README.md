@@ -69,6 +69,8 @@ This executes the generated SQL and creates all tables in the SQLite database (`
 python manage.py migrate
 ```
 
+On a brand-new database, this step also seeds 3 starter weather search entries so the public home page has recent results immediately.
+
 #### 3. Create a superuser (admin account)
 
 This creates the administrator account used to access the `/admin` panel. You will be prompted to choose a username, email address, and password:
