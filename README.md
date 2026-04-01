@@ -93,7 +93,7 @@ The app will be available at **http://127.0.0.1:8000/**.
 | `http://127.0.0.1:8000/weather/` | Main search page (login required) |
 | `http://127.0.0.1:8000/weather/my_searches/` | Personal search history (login required) |
 | `http://127.0.0.1:8000/accounts/login/` | Login page |
-| `http://127.0.0.1:8000/accounts/signup/` | Registration page |
+| `http://127.0.0.1:8000/weather/signup/` | Registration page |
 | `http://127.0.0.1:8000/admin/` | Django admin panel (superuser only) |
 
 ## Help
