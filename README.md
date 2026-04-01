@@ -22,7 +22,11 @@ I found the `python-weather` API and wanted to try it out, so I incorporated it 
 
 ### Installing
 
-1. **Clone or download the repository** and open a terminal in the project root (the folder that contains `requirements.txt` and `mysite/`).
+1. **Clone or download the repository** and open a terminal in the project root (the folder that contains `requirements.txt` and `mysite/`). If your ZIP extraction created an outer folder and an inner project folder with similar names, `cd` into the inner folder first.
+
+  ```bash
+  cd miniproject4ZachSlusser-main
+  ```
 
 2. **Create and activate a virtual environment** *(recommended)*:
 
@@ -30,9 +34,17 @@ I found the `python-weather` API and wanted to try it out, so I incorporated it 
    python -m venv venv
    ```
 
-   - Windows:
+   - Windows Command Prompt:
+     ```bat
+     venv\Scripts\activate.bat
+     ```
+   - Windows PowerShell:
+     ```powershell
+     .\venv\Scripts\Activate.ps1
+     ```
+   - Windows Git Bash:
      ```bash
-     venv\Scripts\activate
+     source venv/Scripts/activate
      ```
    - macOS / Linux:
      ```bash
@@ -116,3 +128,4 @@ This project is licensed under the Zach Slusser License — see the LICENSE.md f
 
 - [python-weather](https://github.com/null8626/python-weather) — lightweight async weather client used to fetch live conditions
 - [Django](https://www.djangoproject.com/) — web framework powering the backend, authentication, and ORM
+
