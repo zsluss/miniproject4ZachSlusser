@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.db import migrations
 from django.utils import timezone
 
@@ -8,13 +9,13 @@ def seed_initial_weather_data(apps, schema_editor):
     Zip = apps.get_model("weather", "Zip")
     WeatherData = apps.get_model("weather", "WeatherData")
 
-    seed_user, created = UserModel.objects.get_or_create(
+    seed_user, _ = UserModel.objects.get_or_create(
         username="sample_weather_user",
-        defaults={"email": "sample@example.com"},
+        defaults={
+            "email": "sample@example.com",
+            "password": make_password(None),
+        },
     )
-    if created:
-        seed_user.set_unusable_password()
-        seed_user.save(update_fields=["password"])
 
     now = timezone.now()
     seed_rows = [
